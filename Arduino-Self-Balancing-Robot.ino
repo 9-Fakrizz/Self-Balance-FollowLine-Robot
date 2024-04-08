@@ -42,8 +42,8 @@ double Kd = 2.2;
 double Ki = 270;
 PID pid(&input, &output, &setpoint, Kp, Ki, Kd, DIRECT);
 
-double motorSpeedFactorLeft = 0.6;
-double motorSpeedFactorRight = 0.5;
+double motorSpeedFactorLeft = 0.68;
+double motorSpeedFactorRight = 0.58;
 
 
 //MOTOR CONTROLLER
@@ -84,9 +84,9 @@ void setup()
 
  // supply your own gyro offsets here, scaled for min sensitivity
  mpu.setXGyroOffset(198);
- mpu.setYGyroOffset(81);
+ mpu.setYGyroOffset(82);
  mpu.setZGyroOffset(-91);
- mpu.setZAccelOffset(518); // 1688 factory default for my test chip
+ mpu.setZAccelOffset(588); // 1688 factory default for my test chip
 
  // make sure it worked (returns 0 if so)
  if (devStatus == 0)
@@ -140,29 +140,36 @@ void loop()
     if (rightIRSensorValue == LOW && leftIRSensorValue == LOW)
     {
       // Both sensors off the line, move forward
-      setpoint = 171.55;
-      motorController.move(output+(output*0.05), MIN_ABS_SPEED);
+      setpoint = 185.50;
+      motorController.move(output+(output*0.12), MIN_ABS_SPEED);
+
     }
     else if (rightIRSensorValue == HIGH && leftIRSensorValue == LOW)
     {
       // Right sensor on the line, turn left
       //motorController.move(50, MIN_ABS_SPEED);
-      digitalWrite(ENA,LOW);
-      setpoint = 171.55;
+      digitalWrite(ENA,0);
+      setpoint = 175.50;
+      motorSpeedFactorLeft = 0.8;
+      motorSpeedFactorRight = 0.7;
       //Serial.println("left");
-      motorController.move(output-(output*0.02), MIN_ABS_SPEED);
+      motorController.move(output-(output*0.015), MIN_ABS_SPEED);
     }
     else if (rightIRSensorValue == LOW && leftIRSensorValue == HIGH)
     {
       // Left sensor on the line, turn right
       //motorController.move(-50, MIN_ABS_SPEED);
-      digitalWrite(ENB,LOW);
-      setpoint = 171.55;
+      digitalWrite(ENB,0);
+      setpoint = 175.50;
+      motorSpeedFactorLeft = 0.8;
+      motorSpeedFactorRight = 0.7;
       //Serial.println("right");
-      motorController.move(output-(output*0.02), MIN_ABS_SPEED);
+      motorController.move(output-(output*0.015), MIN_ABS_SPEED);
     }
-    setpoint = 171.40;
-    motorController.move(output+(output*0.15), MIN_ABS_SPEED);
+    setpoint = 171.68;
+    motorSpeedFactorLeft = 0.68;
+    motorSpeedFactorRight = 0.58;
+    motorController.move(output+(output*0.23), MIN_ABS_SPEED);
     
 
   }
